@@ -2,21 +2,13 @@
 using namespace std;
 
 int graph[1000][1000];
-vector<pair<int, int>> idx;
+queue<pair<int, int>> q;
 int m, n;
 
 int dx[] = { -1,1,0,0 };
 int dy[] = { 0,0,-1,1 };
 
 void BFS() {
-	queue<pair<int, int>> q;
-
-	for (int i = 0; i < idx.size(); i++) {
-		int x = idx[i].first;
-		int y = idx[i].second;
-		q.push({ x, y });
-	}
-
 	while (!q.empty()) {
 		int x = q.front().first;
 		int y = q.front().second;
@@ -37,7 +29,7 @@ void BFS() {
 }
 
 int main(void) {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(0);
 
 	cin >> m >> n;
@@ -45,34 +37,27 @@ int main(void) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			cin >> graph[i][j];
-		}
-	}
-
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
 			if (graph[i][j] == 1) {
-				idx.push_back({ i,j });
+				q.push({ i,j });
 			}
 		}
 	}
 
 	BFS();
 
-	bool flag = true;
 	int max = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			if (graph[i][j] == 0)
-				flag = false;
+			if (graph[i][j] == 0) {
+				cout << -1;
+				return 0;
+			}
 			if (max < graph[i][j])
 				max = graph[i][j];
 		}
 	}
 
-	if (flag)
-		cout << max - 1;
-	else
-		cout << -1;
+	cout << max - 1;
 
 	return 0;
 }
