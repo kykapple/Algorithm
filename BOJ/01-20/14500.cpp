@@ -271,7 +271,7 @@ int main(void) {
 	int max_val = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			max_val = max(max_val, BSF(i, j));
+			max_val = max(max_val, BFS(i, j));
 		}
 	}
 
