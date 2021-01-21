@@ -22,7 +22,7 @@ int c6_y[] = { 0,1,1 }; // 4번째 테트로미노
 int c7_x[] = { -1,-1,-1 };
 int c7_y[] = { 0,1,-1 }; // 5번째 테트로미노
 
-int BSF(int x, int y) {
+int BFS(int x, int y) {
 	int max_val = 0, sum = graph[x][y];
 
 	//case 1-1
