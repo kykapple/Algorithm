@@ -11,14 +11,14 @@ void Brute() {
 	for(int i=0; i<m; i++) {
 		if (!visited[i]) {
 			for (int j = 0; j < n; j++) {
-				if (party[i][j] && truth[party[i][j]]) {
-					visited[i] = true;
+				if (party[i][j] && truth[party[i][j]]) { // 해당 파티에 참여한 사람이 진실을 아는 경우
+					visited[i] = true; // 해당 파티는 과장된 이야기를 할 수 없는 파티
 				}
 			}
 
 			if (visited[i]) {
 				for (int j = 0; j < n; j++) {
-					if (!truth[party[i][j]])
+					if (!truth[party[i][j]]) // 그 파티에 있는 사람 모두 진실을 알게 됨
 						truth[party[i][j]] = 1;
 				}
 			}
