@@ -62,9 +62,10 @@ int main(void) {
 	Dijkstra(1);
 	int start_v1 = d[v1];
 	int start_v2 = d[v2];
-
-	long long first = (long long)start_v1 + v1_v2 + v2_n;
-	long long second = (long long)start_v2 + v1_v2 + v1_n;
+	
+	// 최단 거리 비교
+	long long first = (long long)start_v1 + v1_v2 + v2_n;	// start -> v1 -> v2 -> end
+	long long second = (long long)start_v2 + v1_v2 + v1_n;	// start -> v2 -> v1 -> end
 
 	long long result = min(first, second);
 
