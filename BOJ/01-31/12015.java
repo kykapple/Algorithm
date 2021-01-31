@@ -10,33 +10,23 @@ int main(void) {
 	int n;
 	cin >> n;
 
-	vector<int> upper(n);
+	vector<int> upper;
 	for (int i = 0; i < n; i++)
 		cin >> values[i];
 
-	int idx = 0;
-	upper[idx] = values[0];
+	upper.push_back(values[0]);
 
 	for (int i = 1; i < n; i++) {
-		if (upper[idx] < values[i]) {
-			upper[++idx] = values[i];
+		if (upper.back() < values[i]) {
+			upper.push_back(values[i]);
 		}
 		else {
-			int start = 0, end = idx;
-			while (start < end) {
-				int mid = (start + end) / 2;
-
-				if (upper[mid] >= values[i])
-					end = mid;
-				else
-					start = mid + 1;
-			}
-
-			upper[end] = values[i];
+			vector<int>::iterator pos = lower_bound(upper.begin(), upper.end(), values[i]);
+			*pos = values[i];
 		}
 	}
 	
-	cout << idx + 1;
+	cout << upper.size();
 
 	return 0;
 }
