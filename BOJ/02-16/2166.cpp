@@ -17,7 +17,7 @@ int main(void) {
 
     double sum = 0;
     for (int i = 0; i < n; i++) {
-        sum += (x[i] * y[i + 1]) - (x[i + 1] * y[i]);
+        sum += (x[i] * y[i + 1]) - (x[i + 1] * y[i]);   // N각형 구하기
     }
 
     printf("%.1lf", fabs(sum) / 2);
