@@ -6,7 +6,7 @@ using namespace std;
 
 int n, m, k;
 long long tree[1000001];
-long long segtree[1000001 * 4];
+long long segtree[1048576 * 2];
 
 long long make_segtree(int start, int end, int cur) {
     if (start == end) return segtree[cur] = tree[start];     // 단말 노드일 경우
@@ -15,15 +15,13 @@ long long make_segtree(int start, int end, int cur) {
     return segtree[cur] = make_segtree(start, mid, cur * 2) + make_segtree(mid + 1, end, cur * 2 + 1);
 }
 
-void change_segtree(int start, int end, int cur, int idx, long long value) {
-    segtree[cur] = segtree[cur] + value;
-    if (start == end) return;
+long long change_segtree(int start, int end, int cur, int idx, long long value) {   // 리프 노드부터 갱신
+    if (end < idx || idx < start) return segtree[cur];
     
+    if (start == end) return segtree[cur] = value;
+
     int mid = (start + end) / 2;
-    if (idx <= mid)
-        change_segtree(start, mid, cur * 2, idx, value);
-    else
-        change_segtree(mid + 1, end, cur * 2 + 1, idx, value);
+    return segtree[cur] = change_segtree(start, mid, cur * 2, idx, value) + change_segtree(mid + 1, end, cur * 2 + 1, idx, value);
 }
 
 long long get_sum(int start, int end, int cur, int left, long long right) {
@@ -38,7 +36,7 @@ long long get_sum(int start, int end, int cur, int left, long long right) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    
+
     cin >> n >> m >> k;
 
     for (int i = 1; i <= n; i++) {
@@ -57,8 +55,7 @@ int main() {
 
         switch (a) {
         case 1:
-            change_segtree(1, n, 1, b, c - tree[b]);
-            tree[b] = c;
+            change_segtree(1, n, 1, b, c);
             break;
         case 2:
             cout << get_sum(1, n, 1, b, c) << '\n';
