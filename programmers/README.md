@@ -31,9 +31,3 @@ public int[][] rotate(int[][] arr) {
   return new_arr;
 }
 ```
-
-### 제목
-#### 1번
-
-- ㄴㅁㅇㅁㄴㅇㅁㄴ
-- 
