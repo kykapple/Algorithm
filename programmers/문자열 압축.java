@@ -1,48 +1,33 @@
 class Solution {
-    
-    public int getPlusValue(int cnt) {
-        if(cnt == 1) return 0;
-        else if(cnt < 10) return 1;
-        else if(cnt < 100) return 2;
-        else if(cnt < 1000) return 3;
-        else return 4;
-    }
-    
     public int solution(String s) {
-        int answer = s.length();
+        int answer = 1001;
+        int length = s.length();
         
-        for(int i=1; i<=s.length()/2; i++) {
-            int len = 0, cnt = 1;
-            String str = s.substring(0, i);
-            
-            for(int j=i; j<s.length(); j+=i) {
-                if(j + i > s.length()) {
-                    len += i;
-                    len += getPlusValue(cnt);
-                    len += s.length() - j;
-                    cnt = 0;
+        for (int i = 1; i <= length; i++) {
+            String result = "";
+            String prev = s.substring(0, i);
+            int cnt = 1, j = i;
+        
+            for (j = i; j < length; j += i) {
+                if (j + i > length) {
                     break;
                 }
-                String next = s.substring(j, j+i);
                 
-                if(str.equals(next)) {
+                String str = s.substring(j, j + i);
+                
+                if (str.equals(prev)) {
                     cnt++;
                 } else {
-                    str = next;
-                    
-                    len += i;
-                    len += getPlusValue(cnt);
-                    
+                    result = cnt > 1 ? result + cnt + prev : result + prev;
+                    prev = str;
                     cnt = 1;
                 }
             }
             
-            if(cnt != 0) {
-                len += i;
-                len += getPlusValue(cnt);
-            }
+            result = cnt > 1 ? result + cnt + prev : result + prev;
+            result += s.substring(j, length);
             
-            answer = Math.min(answer, len);
+            answer = Math.min(answer, result.length());
         }
         
         return answer;
