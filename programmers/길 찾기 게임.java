@@ -1,122 +1,101 @@
 import java.util.*;
 
 class Solution {
-    Node root;
-    ArrayList<Integer> preList = new ArrayList<>();
-    ArrayList<Integer> postList = new ArrayList<>();
-    ArrayList<Node> depthList = new ArrayList<>();
+    int preOrderIdx, postOrderIdx;
+    Node root = null;
+    List<Node> list = new ArrayList<>();
+    int[][] answer;
 
-    class Node {
+    class Node implements Comparable<Node> {
+        int x;
+        int y;
         int idx;
-        int num;
-        int depth;
         Node left;
         Node right;
-        
-        public Node(int idx, int num) {
+
+        public Node(int x, int y, int idx) {
+            this.x = x;
+            this.y = y;
             this.idx = idx;
-            this.num = num;
         }
-        
-        public Node(int idx, int num, int depth) {
-            this.idx = idx;
-            this.num = num;
-            this.depth = depth;
+
+        public int compareTo(Node p) {
+            if (y == p.y) return x - p.x;
+            return p.y - y;
         }
     }
-    
+
     public int[][] solution(int[][] nodeinfo) {
-        
-        int rootIdx = 0, rootX = 0, maxY = -1;
+        answer = new int[2][nodeinfo.length];
+
         for (int i = 0; i < nodeinfo.length; i++) {
             int x = nodeinfo[i][0];
             int y = nodeinfo[i][1];
-            
-            if (maxY < y) {
-                maxY = y;
-                rootIdx = i + 1;
-                rootX = x;
-            }
+            list.add(new Node(x, y, i + 1));
         }
-        root = new Node(rootIdx, rootX);
-        
-        for (int i = 0; i < nodeinfo.length; i++) {
-            int x = nodeinfo[i][0];
-            int y = nodeinfo[i][1];
-            if (i + 1 == root.idx) continue;
-            
-            depthList.add(new Node(i + 1, x, y));
+
+        Collections.sort(list);
+
+        for (int i = 0; i < list.size(); i++) {
+            insert(list.get(i));
         }
-        
-        Collections.sort(depthList, (n1, n2) -> n2.depth - n1.depth);
-        
-        for (int i = 0; i < depthList.size(); i++) {
-            insert(depthList.get(i));
-        }
-        
+
         preOrder(root);
         postOrder(root);
-        
-        int[][] answer = new int[2][preList.size()];
-        
-        for (int i = 0; i < preList.size(); i++) {
-            answer[0][i] = preList.get(i);
-        }
-        
-        for (int i = 0; i < postList.size(); i++) {
-            answer[1][i] = postList.get(i);
-        }
-        
+
         return answer;
     }
-    
+
     public void preOrder(Node curr) {
-        preList.add(curr.idx);
-        
+        answer[0][preOrderIdx++] = curr.idx;
+
         if (curr.left != null) {
             preOrder(curr.left);
         }
-        
+
         if (curr.right != null) {
             preOrder(curr.right);
         }
     }
-    
+
     public void postOrder(Node curr) {
         if (curr.left != null) {
             postOrder(curr.left);
         }
-        
+
         if (curr.right != null) {
             postOrder(curr.right);
         }
-        
-        postList.add(curr.idx);
+
+        answer[1][postOrderIdx++] = curr.idx;
     }
-    
-    public void insert(Node el) {
-        Node head = root;
+
+    public void insert(Node newNode) {
+        if (root == null) {
+            root = newNode;
+            return;
+        }
+
         Node curr = root;
-        
+        Node parent = root;
+
         while (true) {
-            head = curr;
-            if (curr.num > el.num) {
-                curr = head.left;
-                
+            parent = curr;
+            if (curr.x < newNode.x) {
+                curr = curr.right;
                 if (curr == null) {
-                    head.left = el;
-                    break;
+                    parent.right = newNode;
+                    return;
                 }
             } else {
-                curr = head.right;
-                
+                curr = curr.left;
                 if (curr == null) {
-                    head.right = el;
-                    break;
-                } 
+                    parent.left = newNode;
+                    return;
+                }
             }
+
         }
-        
     }
-    
+
 }
