@@ -1,67 +1,54 @@
 import java.util.*;
 
 class Solution {
-    List<String> ans = new ArrayList<>();
-    List<Pair> list = new ArrayList<>();
-    boolean visited[];
-    boolean flag;
-    
-    class Pair implements Comparable<Pair> {
-        String from;
-        String to;
-        
-        public Pair(String from, String to) {
-            this.from = from;
-            this.to = to;
-        }
-        
-        @Override
-        public int compareTo(Pair p) {
-            if(from.compareTo(p.from) == 0) {
-                return to.compareTo(p.to);
-            }
-            return from.compareTo(p.from);
-        }
-    }
+    int n;
+    ArrayList<String> answer;
+    Map<String, ArrayList<String>> map;
+    Map<String, boolean[]> visited;
     
     public String[] solution(String[][] tickets) {
-        String[] answer = new String[tickets.length + 1];
-        visited = new boolean[tickets.length];
+        n = tickets.length;
+        answer = new ArrayList<>();
+        map = new HashMap<>();
+        visited = new HashMap<>();
         
-        for(int i = 0; i < tickets.length; i++) {
-            list.add(new Pair(tickets[i][0], tickets[i][1]));
+        for (int i = 0; i < tickets.length; i++) {
+            if (map.get(tickets[i][0]) == null) {
+                map.put(tickets[i][0], new ArrayList<>());
+            }
+            map.get(tickets[i][0]).add(tickets[i][1]);
         }
         
-        Collections.sort(list);
-        
-        dfs("ICN", new ArrayList<>());
-        
-        for(int i = 0; i < ans.size(); i++) {
-            answer[i] = ans.get(i);
+        for (String str : map.keySet()) {
+            ArrayList<String> list = map.get(str);
+            visited.put(str, new boolean[list.size()]);
         }
-        return answer;
+        
+        solve("ICN", "ICN", 0);
+        Collections.sort(answer);
+        
+        return answer.get(0).split("-");
     }
     
-    public void dfs(String cur, ArrayList<String> path) {
-        path.add(cur);
-        if(path.size() == list.size() + 1) {
-            ans = path;
-            flag = true;
+    public void solve(String curr, String str, int cnt) {
+        if (cnt == n) {
+            answer.add(str);
             return;
         }
         
-        for(int i = 0; i < list.size(); i++) {
-            Pair p = list.get(i);
-            if(!visited[i] && cur.equals(p.from)) {
-                visited[i] = true;
-                dfs(p.to, path);
-                
-                if(flag) return;
-                
-                visited[i] = false;
-                path.remove(path.size() - 1);
-            }
+        ArrayList<String> list = map.get(curr);
+        boolean[] check = visited.get(curr);
+        if (list == null) {
+            return;
         }
         
+        for (int i = 0; i < list.size(); i++) {
+            String next = list.get(i);
+            if (!check[i]) {
+                check[i] = true;
+                solve(next, str + "-" + next, cnt + 1);
+                check[i] = false;
+            }
+        }
     }
 }
